@@ -19,10 +19,16 @@ import matplotlib.pyplot as plt
 import sys
 import time
 ################## cuda #################
+def print_gpu_memory():
+    for i in range(torch.cuda.device_count()):
+        print(f"GPU {i}: {torch.cuda.memory_allocated(i) / 1024 ** 2:.2f} MiB used out of {torch.cuda.get_device_properties(i).total_memory / 1024 ** 2:.2f} MiB")
+
+# Example usage
+print_gpu_memory()
 # Check if CUDA is available and set the default tensor type accordingly
 print("torch.cuda.device_count() = ",torch.cuda.device_count())
 print("torch.cuda.get_device_name(0) = ",torch.cuda.get_device_name(0))
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+device = torch.device("cuda:1") if torch.cuda.is_available() else torch.device("cpu")
 if torch.cuda.is_available():
     print("CUDA is available. Setting default tensor type to CUDA tensor.")
     torch.set_default_tensor_type('torch.cuda.FloatTensor')
@@ -33,7 +39,7 @@ else:
 ################## Parameters #################
 torch.set_default_dtype(torch.float64)
 n_iteration = 20000
-num_show = 1000
+num_show = 100
 space_dim = 4
 input_dim = space_dim + 1
 m = 200
